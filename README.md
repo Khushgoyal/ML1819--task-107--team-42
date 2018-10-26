@@ -1,5 +1,5 @@
-                                         ML Research Assignments 2018/19
-                                        Gender Prediction Using Twitter Data
+# ML Research Assignments 2018/19
+## Gender Prediction Using Twitter Data
                                         
 Given Problem:
 How well can the gender of Twitter users be predicted? 

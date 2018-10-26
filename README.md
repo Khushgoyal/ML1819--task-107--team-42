@@ -1,4 +1,4 @@
-# ML Research Assignments 2018/19
+# ML Research Assignment 2018/19
 ## Gender Prediction Using Twitter Data
                                         
 Given Problem:

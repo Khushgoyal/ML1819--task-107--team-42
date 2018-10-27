@@ -17,10 +17,11 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
+from sklearn.feature_selection import RFE
 
 
 #Importing the Dataset for Model Building
-twitter_data=pd.read_csv(r'C:\Users\johnp\Desktop\ML assignment\twitter_data_model_duilding.csv',sep=",",index_col='Unnamed: 0')
+twitter_data=pd.read_csv(r'twitter_data_model_building.csv',sep=",",index_col='Unnamed: 0')
 
 #Performace evaluation function for 
 def PerformanceEvaluationMetrics(y_test,y_pred):
@@ -139,3 +140,15 @@ rf1.fit(X_train,y_train);
 y_pred=rf1.predict(X_test)
 PerformanceEvaluationMetrics(y_test,y_pred)
 #Accuracy 0.65
+
+""" The Accuracy are more or less very similar for all the 3 models.
+-SVM with rbf performs well means the data is non-linean
+-SVM with rbf cannot identify the most predictive variables , so we eliminate svm """
+
+'''-Feature Selection using REcursive elimination'''
+Log_c_name,log_accuracy = RecursiveElimination(logisticRegrModel,X_train,y_train,X_test,y_test)
+#after reduction in more than 31 variables the accuracy decrase gradually.We pick 31 variables for our model
+rf1.model=RandomForestClassifier(random_state=2018,n_jobs=5,oob_score=True,n_estimators=99)
+rf_c_name,rf_accuracy = RecursiveElimination(rf1.model,X_train,y_train,X_test,y_test)
+#after reduction in more than 42 variables the accuracy decrase gradually.We pick 42 variables for our model
+

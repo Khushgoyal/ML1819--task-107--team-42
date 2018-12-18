@@ -170,4 +170,104 @@ feat_importances_lg=pd.DataFrame({'features':x.columns ,'logistic_regression_coe
 feat_importances_lg=feat_importances_lg.sort_values('logistic_regression_coeff')
 feat_importances_lg.plot.barh(x='features',y='logistic_regression_coeff',figsize=(15,10))
 
+#Building a Base SVM
+'''svc= SVC(kernel='poly',random_state=2018)
+svc.fit(X_train, y_train)
+svm_y= svc.predict(X_test)
+PerformanceEvaluationMetrics(y_test,svm_y)
+
+svc= SVC(kernel='linear',random_state=2018)
+svc.fit(X_train, y_train)
+svm_y= svc.predict(X_test)
+PerformanceEvaluationMetrics(y_test,svm_y)'''
+
+svc= SVC(kernel='rbf',random_state=2018)
+svm_params = {"C": [1.5]}
+svm_model_cv = GridSearchCV(estimator = svc, param_grid = svm_params, 
+                        scoring= ['accuracy','roc_auc'], 
+                        cv = 10, 
+                        verbose = 4,
+                       refit=False,return_train_score=True )
+svm_model_cv.fit(X,y)
+
+
+svm_cv_results=pd.DataFrame(svm_model_cv.cv_results_)
+svm_cv_results.columns
+
+svm_best_accuracy = svm_cv_results.mean_test_accuracy.idxmax()
+print(round(pd.DataFrame(svm_cv_results).mean_test_accuracy[svm_best_accuracy],3))
+print(round(pd.DataFrame(svm_cv_results).std_test_accuracy[svm_best_accuracy],3))
+#0.655
+#0.013
+
+print(round(pd.DataFrame(svm_cv_results).mean_test_roc_auc[svm_best_accuracy],3))
+print(round(pd.DataFrame(svm_cv_results).std_test_roc_auc[svm_best_accuracy],3))
+#0.713
+#0.017
+
+#print(round(pd.DataFrame(svm_cv_results.cv_results_).mean_test_f1[svm_best_accuracy],3))
+#print(round(pd.DataFrame(svm_cv_results.cv_results_).std_test_f1[svm_best_accuracy],3))
+
+
+
+#0.65 Accuracy
+
+# Instantiate RandomForrest
+rf1 = RandomForestClassifier(random_state=2018,n_jobs=5,verbose=3,oob_score=True)
+# Train the model on training data
+
+param_grid = { 
+    'n_estimators': [999],
+    'max_features': ['sqrt'],
+    'criterion':['entropy'],
+     'min_samples_split' : [2,3,6,8]
+}
+
+CV_rfc=GridSearchCV(estimator = rf1, param_grid = param_grid, 
+                        scoring= ['accuracy','roc_auc','f1'], 
+                        cv = 10, 
+                        verbose = 4,
+                       refit=False,return_train_score=True )
+CV_rfc.fit(X,y)
+
+rfc_cv_results=pd.DataFrame(CV_rfc.cv_results_)
+rfc_cv_results.columns
+
+rfc_best_accuracy = rfc_cv_results.mean_test_accuracy.idxmax()
+print(round(pd.DataFrame(rfc_cv_results).mean_test_accuracy[rfc_best_accuracy],3))
+print(round(pd.DataFrame(rfc_cv_results).std_test_accuracy[rfc_best_accuracy],3))
+#0.652
+#0.014
+print(round(pd.DataFrame(rfc_cv_results).mean_test_roc_auc[rfc_best_accuracy],3))
+print(round(pd.DataFrame(rfc_cv_results).std_test_roc_auc[rfc_best_accuracy],3))
+#0.715
+#0.018
+
+
+rf_final_model = RandomForestClassifier(random_state=2018,n_jobs=5,verbose=3,oob_score=True,n_estimators=999,max_features='sqrt',criterion='entropy')
+rf_final_model.fit(X,y)
+feat_importances_rf=pd.DataFrame({'features':colnames,'feature_importance':rf_final_model.feature_importances_})
+feat_importances_rf=feat_importances_rf.sort_values('feature_importance')
+feat_importances_rf.plot.barh(x='features',y='feature_importance',figsize=(15,10))
+
+
+
+
+importances = rf_final_model.feature_importances_
+std = np.std([tree.feature_importances_ for tree in rf_final_model.estimators_],
+             axis=0)
+indices = np.argsort(importances)[::-1] [:15] 
+
+# Print the feature ranking
+print("Feature ranking:")
+
+
+# Plot the feature importances of the forest
+plt.figure(figsize=(15,10))
+plt.title("Feature importances")
+plt.barh(x.columns[indices], importances[indices],
+       color="r", xerr=std[indices], align="center")
+plt.show()
+
+
 

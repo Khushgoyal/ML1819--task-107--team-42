@@ -1,6 +1,6 @@
 """ * Gender prediction using Twitter data *
 
-This code builds the data model with the data present in twitter_data_model_duilding.csv
+
 
 
 

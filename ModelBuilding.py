@@ -2,10 +2,10 @@
 
 This code builds the data model with the data present in twitter_data_model_duilding.csv
 
-
+Three algorithms are applied here:
 1.Logistic Regression( regularised)
-
-
+2.Support Vector Machine
+3.RandomForest
 
 """
 from sklearn.model_selection import train_test_split
@@ -101,7 +101,7 @@ def PerformanceEvaluationMetrics(y_test,y_pred):
     plt.legend(loc="lower right")
     plt.show()
 
-	#Function for 90% winsorization 
+#Function for 90% winsorization 
 def winsorizarion_90(series):
     low_limit=series.quantile(0.05)
     high_limit=series.quantile(0.95)

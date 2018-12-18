@@ -2,10 +2,10 @@
 
 This code builds the data model with the data present in twitter_data_model_duilding.csv
 
-Three algorithms are applied here:
-1.Logistic Regression( regularised)
-2.Support Vector Machine
-3.RandomForest
+
+
+
+
 
 """
 from sklearn.model_selection import train_test_split
